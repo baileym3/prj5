@@ -22,6 +22,26 @@ public class Song {
     }
 
 
+    public String title() {
+        return title;
+    }
+
+
+    public String artist() {
+        return artist;
+    }
+
+
+    public String year() {
+        return year;
+    }
+
+
+    public String genre() {
+        return genre;
+    }
+
+
     public int getLikes() {
         return likes;
     }
@@ -40,5 +60,6 @@ public class Song {
         sB.append(genre);
         return sB.toString();
     }
+
 
 }
