@@ -1,6 +1,8 @@
 package prj5;
 
-public class WholeListDataAnalyzer extends DoublyLinkedList<Student> {
+import java.util.Observable;
+
+public class WholeListDataAnalyzer extends Observable {
 
     private DataAnalyzer dA;
     private DoublyLinkedList<Student> dLL;
@@ -13,7 +15,10 @@ public class WholeListDataAnalyzer extends DoublyLinkedList<Student> {
         songNames = input.getSongNames();
         dLL = input.getDLL();
     }
-
+    
+    public String[] getSongs() {
+        return songNames;
+    }
 
     public int getLikes(String songName) {
         int likes = 0;

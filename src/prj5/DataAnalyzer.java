@@ -1,7 +1,12 @@
 package prj5;
 
 import java.util.NoSuchElementException;
-
+/**
+ * Takes in a file and reads the yes/no next
+ * for a student
+ * @author Baile
+ *
+ */
 public class DataAnalyzer {
 
     private String[] likes;
