@@ -2,37 +2,26 @@ package prj5;
 
 public class DoublyLinkedListTest extends student.TestCase {
 
-    private DoublyLinkedList<String> dLL;
+    private DoublyLinkedList dLL;
+    private Student first;
+    private Student second;
+    private Student third;
 
 
     public void setUp() {
-        dLL = new DoublyLinkedList<String>();
+        String[] songData = { "yes", "yes" };
+        dLL = new DoublyLinkedList();
+        first = new Student("1", "1/1/2018", "CS", "SouthEast", "Sports",
+            songData);
+        second = new Student("2", "1/1/2018", "Math", "SouthEast", "Music",
+            songData);
+        third = new Student("3", "1/1/2018", "CS", "NorthEast", "Sports",
+            songData);
     }
 
 
-    public void testSizeandIsEmpty() {
-        assertTrue(dLL.isEmpty());
-        assertEquals(0, dLL.getSize());
-    }
+    public void testHobbySort() {
 
-
-    public void testAddAndRemove() {
-        dLL.add("tupac");
-        assertFalse(dLL.isEmpty());
-        assertEquals(1, dLL.getSize());
-        assertEquals("{tupac}", dLL.toString());
-        dLL.remove();
-        assertTrue(dLL.isEmpty());
-        assertEquals(0, dLL.getSize());
-    }
-
-
-    public void testInsertionSort() {
-        dLL.add("A");
-        dLL.add("C");
-        dLL.add("B");
-        // dLL.insertionSort();
-        assertEquals("{ABC}", dLL.toString());
     }
 
 }

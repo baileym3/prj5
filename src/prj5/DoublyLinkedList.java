@@ -1,62 +1,72 @@
 package prj5;
 
-import java.util.Scanner;
+/**
+ * DoublyLinkedList implementation for students
+ * 
+ * @author Ishaan Singh (ishaan15)
+ * @version 2018.11.15
+ *
+ */
+public class DoublyLinkedList {
 
-public class DoublyLinkedList<T> {
-
-    private class Node<T> {
-
-        private T data;
-        private Node<T> prev;
-        private Node<T> next;
+    private Node<Student> head;
+    private Node<Student> tail;
+    private int size;
+    private String[] songNames;
 
 
-        public Node() {
-            data = null;
-            prev = null;
+    /**
+     * Inner doubly linked node class
+     * 
+     * @author Ishaan Singh (ishaan15)
+     * @version 2018.11.15
+     *
+     * @param <Student>
+     *            the data type to be used
+     */
+    private class Node<Student> {
+
+        private Student student;
+        private Node<Student> next;
+        private Node<Student> prev;
+
+
+        public Node(Student studentIn) {
+            student = studentIn;
             next = null;
+            prev = null;
         }
 
 
-        public Node(T newEntry) {
-            data = newEntry;
-        }
-
-
-        public T getData() {
-            return data;
-        }
-
-
-        public Node<T> getNextNode() {
-            return next;
-        }
-
-
-        public Node<T> getPreviousNode() {
-            return prev;
-        }
-
-
-        public void setNextNode(Node<T> nextNode) {
+        public void setNext(Node<Student> nextNode) {
             next = nextNode;
         }
 
 
-        public void setPrevNode(Node<T> prevNode) {
+        public void setPrev(Node<Student> prevNode) {
             prev = prevNode;
+        }
+
+
+        public Node<Student> getNext() {
+            return next;
+        }
+
+
+        public Node<Student> getPrev() {
+            return prev;
+        }
+
+
+        public Student getData() {
+            return student;
         }
     }
 
-    private Node<T> head;
-    private Node<T> tail;
 
-    private Scanner scannerSong;
-    private Scanner scannerSurvey;
-
-    private int size;
-
-
+    /**
+     * Default constructor
+     */
     public DoublyLinkedList() {
         head = null;
         tail = null;
@@ -64,52 +74,84 @@ public class DoublyLinkedList<T> {
     }
 
 
+    /**
+     * Checks to see if the list is empty
+     * 
+     * @return true if the list is empty
+     */
     public boolean isEmpty() {
         return size == 0;
     }
 
 
-    public int getSize() {
+    /**
+     * Returns the number of items of the list
+     * 
+     * @return the number of items in the list
+     */
+    public int size() {
         return size;
     }
 
 
-    public void add(T newEntry) {
-        Node<T> newNode = new Node<T>(newEntry);
+    /**
+     * Adds a new song into the list at the back
+     * 
+     * @param newStudent
+     *            the song to be added
+     */
+    public void add(Student newStudent) {
+        Node<Student> newNode = new Node<Student>(newStudent);
         if (isEmpty()) {
             head = newNode;
         }
         else {
-            tail.setNextNode(newNode);
+            tail.setNext(newNode);
         }
         tail = newNode;
         size++;
     }
 
 
+    /**
+     * Removes a song from the front of the list
+     */
     public void remove() {
-        head = head.getNextNode();
+        Node<Student> firstNode = head;
+        head = head.getNext();
+        firstNode.setNext(null);
         size--;
     }
 
 
-    public T getNextData() {
-        Node<T> currentNode = head;
-        T result = currentNode.getData();
-        currentNode = currentNode.getNextNode();
-        return result;
-    }
-
-
+    /**
+     * Returns a string of all the songs and their data in the list
+     */
     public String toString() {
         StringBuilder sB = new StringBuilder("{");
-        Node<T> currentNode = head;
+        Node<Student> currentNode = head;
         while (currentNode != null) {
             sB.append(currentNode.getData().toString());
-            currentNode = currentNode.getNextNode();
+            currentNode = currentNode.getNext();
         }
         sB.append("}");
         return sB.toString();
+    }
+
+
+    /**
+     * Outputs all the song names in the DLL
+     */
+    public Student[] studentArray() {
+        Node<Student> curr = head;
+        int x = 0;
+        Student[] students = new Student[size];
+        while (curr != null) {
+            students[x] = curr.getData();
+            curr = curr.getNext();
+            x++;
+        }
+        return students;
     }
 
 }
