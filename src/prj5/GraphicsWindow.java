@@ -23,7 +23,13 @@ public class GraphicsWindow {
     private DoublyLinkedList1 songsDLL;
     private String[] songs;
     private static final int BAR_FACTOR = 75;
-
+    private boolean hobbyDisplayed;
+    private boolean regionDisplayed;
+    private boolean majorDisplayed;
+    private Button prev;
+    private Button next;
+    private int firstIndex;
+    private int lastIndex;
 
     /**
      * Created the window and buttons, sets the file reader to the parameter and
@@ -40,6 +46,11 @@ public class GraphicsWindow {
         songsDLL = fR.getSongsDLL();
         songs = songsDLL.songNames();
         createButtons();
+        hobbyDisplayed = false;
+        regionDisplayed = false;
+        majorDisplayed = false;
+        firstIndex = 0;
+        lastIndex = 8;
     }
 
 
@@ -47,7 +58,7 @@ public class GraphicsWindow {
      * Creates the buttons
      */
     private void createButtons() {
-        Button prev = new Button("< Previous");
+        prev = new Button("< Previous");
         window.addButton(prev, WindowSide.NORTH);
         prev.onClick(this, "clickedPrev");
         prev.disable();
@@ -63,7 +74,7 @@ public class GraphicsWindow {
         Button sortGenre = new Button("Sort By Genre");
         window.addButton(sortGenre, WindowSide.NORTH);
         sortGenre.onClick(this, "clickedGenre");
-        Button next = new Button("Next >");
+        next = new Button("Next >");
         window.addButton(next, WindowSide.NORTH);
         next.onClick(this, "clickedNext");
         Button hobby = new Button("Represent Hobby");
@@ -79,6 +90,11 @@ public class GraphicsWindow {
         window.addButton(quit, WindowSide.SOUTH);
         quit.onClick(this, "clickedQuit");
     }
+
+
+    /**
+     * Draws the vertical bars as seen in the window
+     */
     private void drawVerticalBars() {
         for (int x = 1; x <= 3; x++) {
             for (int y = 1; y <= 3; y++) {
@@ -88,67 +104,145 @@ public class GraphicsWindow {
             }
         }
     }
+
+
+    /**
+     * Updates the songs variables with the songsDLL song names
+     */
     private void updateSongs() {
         songs = songsDLL.songNames();
     }
+
+
     /**
      * Executes when the Quit button is clicked
+     * 
      * @param button
      */
     public void clickedQuit(Button button) {
         System.exit(0);
     }
+    
+    public void clickedPrev(Button button) {
+        window.removeAllShapes();
+        next.enable();
+        drawVerticalBars();
+        firstIndex -= 9;
+        if (lastIndex % 9 != 0) {
+            lastIndex -= (lastIndex % 9);
+        }
+        else {
+            lastIndex -= 9;
+        }
+        if (firstIndex <= 0) {
+            prev.disable();
+        }
+        update();
+        this.addSongInfo();
+    }
+    public void clickedNext(Button button) {
+        window.removeAllShapes();
+        prev.enable();
+        drawVerticalBars();
+        firstIndex += 9;
+        lastIndex += 9;
+        if (lastIndex > songs.length) {
+            lastIndex = songs.length - 1;
+            next.disable();
+        }
+        update();
+        this.addSongInfo();
+    }
 
     public void clickedHobby(Button button) {
         window.removeAllShapes();
-        drawHobbyGraphs();
         drawVerticalBars();
+        drawHobbyGraphs();
         addSongInfo();
         drawHobbyLegend();
+        hobbyDisplayed = true;
+        majorDisplayed = false;
+        regionDisplayed = false;
     }
-    
+
+
     public void clickedMajor(Button button) {
         window.removeAllShapes();
         drawVerticalBars();
+        drawMajorGraphs();
         drawMajorLegend();
         addSongInfo();
+        majorDisplayed = true;
+        hobbyDisplayed = false;
+        regionDisplayed = false;
     }
+
+
     public void clickedRegion(Button button) {
         window.removeAllShapes();
         drawVerticalBars();
+        drawRegionGraphs();
         drawRegionLegend();
         addSongInfo();
+        regionDisplayed = false;
+        hobbyDisplayed = false;
+        majorDisplayed = false;
     }
+
+
     public void clickedArtist(Button button) {
         window.removeAllShapes();
         drawVerticalBars();
         songsDLL.artistSort();
         updateSongs();
+        update();
         this.addSongInfo();
+
     }
+
+
     public void clickedTitle(Button button) {
         window.removeAllShapes();
         drawVerticalBars();
         songsDLL.titleSort();
         updateSongs();
+        update();
         this.addSongInfo();
+        drawVerticalBars();
     }
+
+
     public void clickedGenre(Button button) {
         window.removeAllShapes();
         drawVerticalBars();
         songsDLL.genreSort();
         updateSongs();
+        update();
         this.addSongInfo();
     }
+
+
+    /**
+     * Sorts the data by year when clicked
+     * 
+     * @param button
+     */
     public void clickedYear(Button button) {
         window.removeAllShapes();
         drawVerticalBars();
         songsDLL.yearSort();
         updateSongs();
+        update();
         this.addSongInfo();
     }
+
+
+    /**
+     * Draws the legend for the different regions
+     */
     private void drawRegionLegend() {
-        TextShape legend = new TextShape(640, 110, "Region Legend", Color.BLACK);
+        TextShape legend = new TextShape(640, 110, "Region Legend",
+            Color.BLACK);
         legend.setBackgroundColor(Color.WHITE);
         window.addShape(legend);
         TextShape ne = new TextShape(640, 130, "Northeast", Color.MAGENTA);
@@ -160,7 +254,8 @@ public class GraphicsWindow {
         TextShape other = new TextShape(640, 160, "Other U.S.", Color.ORANGE);
         other.setBackgroundColor(Color.WHITE);
         window.addShape(other);
-        TextShape outside = new TextShape(640, 175, "Outside U.S.", Color.GREEN);
+        TextShape outside = new TextShape(640, 175, "Outside U.S.",
+            Color.GREEN);
         outside.setBackgroundColor(Color.WHITE);
         window.addShape(outside);
         TextShape songTitle = new TextShape(655, 195, "Song Title",
@@ -172,6 +267,8 @@ public class GraphicsWindow {
         heardlike.setBackgroundColor(Color.WHITE);
         window.addShape(heardlike);
     }
+
+
     /**
      * Draws the legend for the majors
      */
@@ -200,6 +297,8 @@ public class GraphicsWindow {
         heardlike.setBackgroundColor(Color.WHITE);
         window.addShape(heardlike);
     }
+
+
     /**
      * Draws the legend containing the hobbies
      */
@@ -230,6 +329,9 @@ public class GraphicsWindow {
     }
 
 
+    /**
+     * Displays the song title and artist on the window
+     */
     public void addSongInfo() {
         int x = 0;
         int x2 = 0;
@@ -237,7 +339,7 @@ public class GraphicsWindow {
         TextShape newSong;
         TextShape artistOutput;
         String artist;
-        for (int i = 0; i < songs.length; i++) {
+        for (int i = firstIndex; i <= lastIndex; i++) {
             artist = songsDLL.getSong(songs[i]).artist();
             if (x / 3 == 0) {
                 int yLoc = 5;
@@ -270,16 +372,17 @@ public class GraphicsWindow {
         }
     }
 
-    
-    public void drawHobbyGraphs() {
-        for (int i = 0; i < songs.length; i++) {
+
+    private void drawHobbyGraphs() {
+        for (int i = firstIndex; i <= lastIndex; i++) {
             // HEARD
             int xLoc;
             int yLoc;
-            if (i / 3 == 0) {
+            int rem = i % 9;
+            if (rem >= 0 && rem <= 2) {
                 yLoc = 40;
             }
-            else if (i / 3 == 1) {
+            else if (rem >= 3 && rem <= 5) {
                 yLoc = 130;
             }
             else {
@@ -327,28 +430,225 @@ public class GraphicsWindow {
             if (fR.getTotalHobby("reading") > 0) {
                 int size = fR.getLikesHobbyNumber(songName, "reading")
                     * BAR_FACTOR / fR.getTotalHobby("reading");
-                Shape graph = new Shape(xLoc, yLoc, size, 10, Color.magenta);
+                Shape graph = new Shape(xLoc + 3, yLoc, size, 10, Color.magenta);
                 window.addShape(graph);
             }
             if (fR.getTotalHobby("art") > 0) {
                 int size = fR.getLikesHobbyNumber(songName, "art") * BAR_FACTOR
                     / fR.getTotalHobby("art");
-                Shape graph = new Shape(xLoc, yLoc + 10, size, 10, Color.BLUE);
+                Shape graph = new Shape(xLoc + 3, yLoc + 10, size, 10, Color.BLUE);
                 window.addShape(graph);
             }
             if (fR.getTotalHobby("music") > 0) {
                 int size = fR.getLikesHobbyNumber(songName, "music")
                     * BAR_FACTOR / fR.getTotalHobby("music");
-                Shape graph = new Shape(xLoc, yLoc + 30, size, 10, Color.GREEN);
+                Shape graph = new Shape(xLoc + 3, yLoc + 30, size, 10, Color.GREEN);
                 window.addShape(graph);
             }
             if (fR.getTotalHobby("sports") > 0) {
                 int size = fR.getLikesHobbyNumber(songName, "sports")
                     * BAR_FACTOR / fR.getTotalHobby("sports");
-                Shape graph = new Shape(xLoc, yLoc + 20, size, 10, Color.orange);
+                Shape graph = new Shape(xLoc + 3, yLoc + 20, size, 10,
+                    Color.orange);
                 window.addShape(graph);
             }
         }
     }
-    
+
+
+    private void drawRegionGraphs() {
+        for (int i = firstIndex; i <= lastIndex; i++) {
+            // HEARD
+            int xLoc;
+            int yLoc;
+            int rem = i % 9;
+            if (rem >= 0 && rem <= 2) {
+                yLoc = 40;
+            }
+            else if (rem >= 3 && rem <= 5) {
+                yLoc = 130;
+            }
+            else {
+                yLoc = 220;
+            }
+            if (i % 3 == 0) {
+                xLoc = 150;
+            }
+            else if (i % 3 == 1) {
+                xLoc = 350;
+            }
+            else {
+                xLoc = 550;
+            }
+            String songName = songs[i];
+            if (fR.getTotalRegion("Northeast") > 0) {
+                int northeastHeardSize = fR.getHeardRegionNumber(songName,
+                    "Northeast") * BAR_FACTOR / fR.getTotalRegion("Northeast");
+                Shape northeastHeardGraph = new Shape(xLoc - northeastHeardSize,
+                    yLoc, northeastHeardSize, 10, Color.MAGENTA);
+                window.addShape(northeastHeardGraph);
+            }
+            if (fR.getTotalRegion(
+                "United States (other than Southeast or Northwest)") > 0) {
+                int otherUSHeardSize = fR.getHeardRegionNumber(songName,
+                    "United States (other than Southeast or Northwest)")
+                    * BAR_FACTOR / fR.getTotalRegion(
+                        "United States (other than Southeast or Northwest)");
+                Shape otherUSHeardGraph = new Shape(xLoc - otherUSHeardSize,
+                    yLoc + 20, otherUSHeardSize, 10, Color.orange);
+                window.addShape(otherUSHeardGraph);
+            }
+            if (fR.getTotalRegion("Southeast") > 0) {
+                int southeastHeardSize = fR.getHeardRegionNumber(songName,
+                    "Southeast") * BAR_FACTOR / fR.getTotalRegion("Southeast");
+                Shape southeastHeardGraph = new Shape(xLoc - southeastHeardSize,
+                    yLoc + 10, southeastHeardSize, 10, Color.blue);
+                window.addShape(southeastHeardGraph);
+            }
+            if (fR.getTotalRegion("Outside of United States") > 0) {
+                int outsideHeardSize = fR.getHeardRegionNumber(songName,
+                    "Outside of United States") * BAR_FACTOR / fR
+                        .getTotalRegion("Outside of United States");
+                Shape outsideHeardGraph = new Shape(xLoc - outsideHeardSize,
+                    yLoc + 30, outsideHeardSize, 10, Color.green);
+                window.addShape(outsideHeardGraph);
+            }
+            // LIKES
+            if (fR.getTotalRegion("Northeast") > 0) {
+                int size = fR.getLikesRegionNumber(songName, "Northeast")
+                    * BAR_FACTOR / fR.getTotalRegion("Northeast");
+                Shape graph = new Shape(xLoc + 3, yLoc, size, 10, Color.magenta);
+                window.addShape(graph);
+            }
+            if (fR.getTotalRegion("Southeast") > 0) {
+                int size = fR.getLikesRegionNumber(songName, "Southeast")
+                    * BAR_FACTOR / fR.getTotalRegion("Southeast");
+                Shape graph = new Shape(xLoc + 3, yLoc + 10, size, 10, Color.BLUE);
+                window.addShape(graph);
+            }
+            if (fR.getTotalRegion(
+                "United States (other than Southeast or Northwest)") > 0) {
+                int size = fR.getLikesRegionNumber(songName,
+                    "United States (other than Southeast or Northwest)")
+                    * BAR_FACTOR / fR.getTotalRegion(
+                        "United States (other than Southeast or Northwest)");
+                Shape graph = new Shape(xLoc + 3, yLoc + 20, size, 10, Color.ORANGE);
+                window.addShape(graph);
+            }
+            if (fR.getTotalRegion("Outside of United States") > 0) {
+                int size = fR.getLikesRegionNumber(songName,
+                    "Outside of United States") * BAR_FACTOR / fR
+                        .getTotalRegion("Outside of United States");
+                Shape graph = new Shape(xLoc + 3, yLoc + 30, size, 10,
+                    Color.GREEN);
+                window.addShape(graph);
+            }
+        }
+    }
+
+
+    private void drawMajorGraphs() {
+        for (int i = firstIndex; i <= lastIndex; i++) {
+            // HEARD
+            int xLoc;
+            int yLoc;
+            int rem = i % 9;
+            if (rem >= 0 && rem <= 2) {
+                yLoc = 40;
+            }
+            else if (rem >= 3 && rem <= 5) {
+                yLoc = 130;
+            }
+            else {
+                yLoc = 220;
+            }
+            if (i % 3 == 0) {
+                xLoc = 150;
+            }
+            else if (i % 3 == 1) {
+                xLoc = 350;
+            }
+            else {
+                xLoc = 550;
+            }
+            String songName = songs[i];
+            if (fR.getTotalMajor("Computer Science") > 0) {
+                int majorHeardSize = fR.getHeardMajorNumber(songName,
+                    "Computer Science") * BAR_FACTOR / fR.getTotalMajor(
+                        "Computer Science");
+                Shape majorHeardGraph = new Shape(xLoc - majorHeardSize, yLoc,
+                    majorHeardSize, 10, Color.MAGENTA);
+                window.addShape(majorHeardGraph);
+            }
+            if (fR.getTotalMajor("Other Engineering") > 0) {
+                int otherEngHeardSize = fR.getHeardMajorNumber(songName,
+                    "Other Engineering") * BAR_FACTOR / fR.getTotalMajor(
+                        "Other Engineering");
+                Shape otherEngHeardGraph = new Shape(xLoc - otherEngHeardSize,
+                    yLoc + 10, otherEngHeardSize, 10, Color.blue);
+                window.addShape(otherEngHeardGraph);
+            }
+            if (fR.getTotalMajor("Math or CMDA") > 0) {
+                int mathHeardSize = fR.getHeardMajorNumber(songName,
+                    "Math or CMDA") * BAR_FACTOR / fR.getTotalMajor(
+                        "Math or CMDA");
+                Shape mathHeardGraph = new Shape(xLoc - mathHeardSize, yLoc
+                    + 20, mathHeardSize, 10, Color.orange);
+                window.addShape(mathHeardGraph);
+            }
+            if (fR.getTotalMajor("Other") > 0) {
+                int otherHeardSize = fR.getHeardMajorNumber(songName, "Other")
+                    * BAR_FACTOR / fR.getTotalMajor("Other");
+                Shape otherHeardGraph = new Shape(xLoc - otherHeardSize, yLoc
+                    + 30, otherHeardSize, 10, Color.green);
+                window.addShape(otherHeardGraph);
+            }
+            // LIKES
+            if (fR.getTotalMajor("Computer Science") > 0) {
+                int size = fR.getLikesMajorNumber(songName, "Computer Science")
+                    * BAR_FACTOR / fR.getTotalMajor("Computer Science");
+                Shape graph = new Shape(xLoc + 3, yLoc, size, 10, Color.magenta);
+                window.addShape(graph);
+            }
+            if (fR.getTotalMajor("Other Engineering") > 0) {
+                int size = fR.getLikesMajorNumber(songName, "Other Engineering")
+                    * BAR_FACTOR / fR.getTotalMajor("Other Engineering");
+                Shape graph = new Shape(xLoc + 3, yLoc + 10, size, 10, Color.BLUE);
+                window.addShape(graph);
+            }
+            if (fR.getTotalMajor("Math or CMDA") > 0) {
+                int size = fR.getLikesMajorNumber(songName, "Math or CMDA")
+                    * BAR_FACTOR / fR.getTotalMajor("Math or CMDA");
+                Shape graph = new Shape(xLoc + 3, yLoc + 20, size, 10, Color.ORANGE);
+                window.addShape(graph);
+            }
+            if (fR.getTotalMajor("Other") > 0) {
+                int size = fR.getLikesMajorNumber(songName, "Other")
+                    * BAR_FACTOR / fR.getTotalMajor("Other");
+                Shape graph = new Shape(xLoc + 3, yLoc + 30, size, 10,
+                    Color.GREEN);
+                window.addShape(graph);
+            }
+        }
+    }
+
+
+    /**
+     * Updates the window when a "Sort by" button is clicked
+     */
+    public void update() {
+        if (hobbyDisplayed == true) {
+            drawHobbyGraphs();
+            this.drawHobbyLegend();
+        }
+        else if (regionDisplayed == true) {
+            drawRegionGraphs();
+            drawRegionLegend();
+        }
+        else {
+            drawMajorGraphs();
+            drawMajorLegend();
+        }
+    }
+
 }
