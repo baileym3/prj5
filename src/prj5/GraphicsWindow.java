@@ -31,6 +31,7 @@ public class GraphicsWindow {
     private int firstIndex;
     private int lastIndex;
 
+
     /**
      * Created the window and buttons, sets the file reader to the parameter and
      * uses it to read the songs and survey data
@@ -39,7 +40,7 @@ public class GraphicsWindow {
      *             if the song and survey files cannot be found
      */
     public GraphicsWindow(FileReader fRIn) throws FileNotFoundException {
-        window = new Window("Project 5 Implementation");
+        window = new Window("Project 5: baileym3 ishaan5 name");
         fR = fRIn;
         fR.readSongs();
         fR.readSurvey();
@@ -122,7 +123,8 @@ public class GraphicsWindow {
     public void clickedQuit(Button button) {
         System.exit(0);
     }
-    
+
+
     public void clickedPrev(Button button) {
         window.removeAllShapes();
         next.enable();
@@ -133,13 +135,17 @@ public class GraphicsWindow {
         }
         else {
             lastIndex -= 9;
+            
         }
+        lastIndex--;
         if (firstIndex <= 0) {
             prev.disable();
         }
         update();
         this.addSongInfo();
     }
+
+
     public void clickedNext(Button button) {
         window.removeAllShapes();
         prev.enable();
@@ -153,6 +159,7 @@ public class GraphicsWindow {
         update();
         this.addSongInfo();
     }
+
 
     public void clickedHobby(Button button) {
         window.removeAllShapes();
@@ -184,7 +191,7 @@ public class GraphicsWindow {
         drawRegionGraphs();
         drawRegionLegend();
         addSongInfo();
-        regionDisplayed = false;
+        regionDisplayed = true;
         hobbyDisplayed = false;
         majorDisplayed = false;
     }
@@ -430,19 +437,22 @@ public class GraphicsWindow {
             if (fR.getTotalHobby("reading") > 0) {
                 int size = fR.getLikesHobbyNumber(songName, "reading")
                     * BAR_FACTOR / fR.getTotalHobby("reading");
-                Shape graph = new Shape(xLoc + 3, yLoc, size, 10, Color.magenta);
+                Shape graph = new Shape(xLoc + 3, yLoc, size, 10,
+                    Color.magenta);
                 window.addShape(graph);
             }
             if (fR.getTotalHobby("art") > 0) {
                 int size = fR.getLikesHobbyNumber(songName, "art") * BAR_FACTOR
                     / fR.getTotalHobby("art");
-                Shape graph = new Shape(xLoc + 3, yLoc + 10, size, 10, Color.BLUE);
+                Shape graph = new Shape(xLoc + 3, yLoc + 10, size, 10,
+                    Color.BLUE);
                 window.addShape(graph);
             }
             if (fR.getTotalHobby("music") > 0) {
                 int size = fR.getLikesHobbyNumber(songName, "music")
                     * BAR_FACTOR / fR.getTotalHobby("music");
-                Shape graph = new Shape(xLoc + 3, yLoc + 30, size, 10, Color.GREEN);
+                Shape graph = new Shape(xLoc + 3, yLoc + 30, size, 10,
+                    Color.GREEN);
                 window.addShape(graph);
             }
             if (fR.getTotalHobby("sports") > 0) {
@@ -607,19 +617,22 @@ public class GraphicsWindow {
             if (fR.getTotalMajor("Computer Science") > 0) {
                 int size = fR.getLikesMajorNumber(songName, "Computer Science")
                     * BAR_FACTOR / fR.getTotalMajor("Computer Science");
-                Shape graph = new Shape(xLoc + 3, yLoc, size, 10, Color.magenta);
+                Shape graph = new Shape(xLoc + 3, yLoc, size, 10,
+                    Color.magenta);
                 window.addShape(graph);
             }
             if (fR.getTotalMajor("Other Engineering") > 0) {
                 int size = fR.getLikesMajorNumber(songName, "Other Engineering")
                     * BAR_FACTOR / fR.getTotalMajor("Other Engineering");
-                Shape graph = new Shape(xLoc + 3, yLoc + 10, size, 10, Color.BLUE);
+                Shape graph = new Shape(xLoc + 3, yLoc + 10, size, 10,
+                    Color.BLUE);
                 window.addShape(graph);
             }
             if (fR.getTotalMajor("Math or CMDA") > 0) {
                 int size = fR.getLikesMajorNumber(songName, "Math or CMDA")
                     * BAR_FACTOR / fR.getTotalMajor("Math or CMDA");
-                Shape graph = new Shape(xLoc + 3, yLoc + 20, size, 10, Color.ORANGE);
+                Shape graph = new Shape(xLoc + 3, yLoc + 20, size, 10,
+                    Color.ORANGE);
                 window.addShape(graph);
             }
             if (fR.getTotalMajor("Other") > 0) {
