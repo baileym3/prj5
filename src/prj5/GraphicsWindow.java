@@ -352,7 +352,7 @@ public class GraphicsWindow {
                 int yLoc = 5;
                 newSong = new TextShape(0, yLoc, songs[i]);
                 newSong.setX(x * 200 + 150 - newSong.getWidth() / 2);
-                artistOutput = new TextShape(0, yLoc + 15, artist);
+                artistOutput = new TextShape(0, yLoc + 15, "by: " + artist);
                 artistOutput.setX(x * 200 + 150 - artistOutput.getWidth() / 2);
             }
             else if (x / 3 == 1) {
@@ -367,7 +367,7 @@ public class GraphicsWindow {
                 int yLoc = 175;
                 newSong = new TextShape(0, yLoc, songs[i]);
                 newSong.setX(x3 * 200 + 150 - newSong.getWidth() / 2);
-                artistOutput = new TextShape(0, yLoc + 15, artist);
+                artistOutput = new TextShape(0, yLoc + 15, "by: " + artist);
                 artistOutput.setX(x3 * 200 + 150 - artistOutput.getWidth() / 2);
                 x3++;
             }
